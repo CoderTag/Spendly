@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Claude Code — Complete Slash Commands Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f9f8f6;
+  --bg-card: #ffffff;
+  --bg-subtle: #f3f2ef;
+  --bg-tag: rgba(214,90,56,0.08);
+  --accent: #d65a38;
+  --border: #e8e5e0;
+  --border-strong: #d0ccc5;
+  --text-1: #1a1714;
+  --text-2: #5c5652;
+  --text-3: #9c9490;
+  --text-4: #c5c0bb;
+  --skill-bg: rgba(180,120,0,0.08);
+  --skill-border: rgba(180,120,0,0.25);
+  --skill-text: #8a5f00;
+  --code-text: #e88a6e;
+  --bg-code: #1a1a2e;
+  --font-sans: "DM Sans", sans-serif;
+  --font-serif: "DM Serif Display", serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page-wrap { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+.hero {
+  padding: 0 1rem 2.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2.5rem;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 500;
+  color: var(--text-3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.hero h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 5.5vw, 52px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero-sub { font-size: 16px; color: var(--text-2); max-width: 560px; line-height: 1.75; margin-bottom: 2rem; }
+.hero-stats { display: flex; gap: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-xl); overflow: hidden; box-shadow: var(--shadow-sm); width: fit-content; }
+.stat-item { padding: 0.875rem 2rem; text-align: center; }
+.stat-item + .stat-item { border-left: 1px solid var(--border); }
+.stat-num { font-family: var(--font-mono); font-size: 22px; font-weight: 600; color: var(--accent); display: block; }
+.stat-label { font-size: 11px; font-weight: 500; color: var(--text-3); letter-spacing: 0.04em; text-transform: uppercase; }
+
+.toolbar { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+.search-wrap { position: relative; }
+.search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-3); font-size: 15px; pointer-events: none; }
+#searchInput {
+  width: 100%; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-xl); padding: 12px 110px 12px 42px;
+  font-size: 14px; font-family: var(--font-sans); color: var(--text-1);
+  outline: none; box-shadow: var(--shadow-sm);
+}
+#searchInput::placeholder { color: var(--text-3); }
+#searchInput:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(214,90,56,0.1); }
+.search-count { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--text-3); font-family: var(--font-mono); }
+.filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill {
+  padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 500;
+  border: 1px solid var(--border); cursor: pointer; background: var(--bg-card);
+  color: var(--text-2); font-family: var(--font-sans); box-shadow: var(--shadow-sm);
+}
+.pill:hover { border-color: var(--accent); color: var(--accent); }
+.pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* Category */
+.cat-section { margin-bottom: 3rem; }
+.cat-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 1.25rem; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.cat-icon-wrap {
+  width: 36px; height: 36px; border-radius: var(--r-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+  border: 1px solid var(--border); background: var(--bg-card); box-shadow: var(--shadow-sm);
+}
+.cat-name { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+.cat-count {
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-3);
+  background: var(--bg-subtle); border: 1px solid var(--border);
+  padding: 2px 10px; border-radius: 10px; margin-left: auto;
+}
+
+/* Grid */
+.cmd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
+.cmd-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 16px 18px; cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+.cmd-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); }
+.cmd-card.open { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(214,90,56,0.08), var(--shadow-md); }
+.card-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.cmd-chip {
+  font-family: var(--font-mono); font-size: 12.5px; font-weight: 600;
+  color: var(--accent); background: var(--bg-tag);
+  padding: 3px 10px; border-radius: var(--r-sm);
+  border: 1px solid rgba(214,90,56,0.18); white-space: nowrap; flex-shrink: 0;
+}
+.skill-tag {
+  font-size: 10px; font-weight: 600; background: var(--skill-bg); color: var(--skill-text);
+  border: 1px solid var(--skill-border); padding: 2px 7px; border-radius: 10px; margin-left: 4px;
+}
+.chevron { margin-left: auto; flex-shrink: 0; color: var(--text-4); font-size: 11px; transition: transform 0.22s, color 0.18s; }
+.cmd-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
+.cmd-summary { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+
+.cmd-details { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+.cmd-card.open .cmd-details { max-height: 700px; padding-top: 14px; }
+.detail-inner { border-top: 1px solid var(--border); padding-top: 14px; }
+.detail-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px; }
+.analogy-box {
+  background: var(--bg-subtle); border-left: 3px solid var(--accent);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0; padding: 10px 14px;
+  font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 12px;
+}
+.analogy-box strong { color: var(--text-1); font-weight: 600; }
+.example-block { background: var(--bg-code); border-radius: var(--r-md); border: 1px solid rgba(255,255,255,0.06); padding: 12px 14px; }
+.example-block pre { font-family: var(--font-mono); font-size: 12px; line-height: 1.75; color: var(--code-text); white-space: pre-wrap; word-break: break-word; }
+.example-block .cmt { color: #4a5060; }
+
+.no-results { text-align: center; padding: 4rem 2rem; color: var(--text-3); font-size: 14px; }
+.no-results span { font-size: 2rem; display: block; margin-bottom: 0.75rem; }
+
+@media (max-width: 640px) {
+  .cmd-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <section class="hero">
+    <div class="hero-eyebrow"><span class="eyebrow-dot"></span>Slash Command Reference</div>
+    <h1>The Complete<br/><em>/command</em> Guide</h1>
+    <p class="hero-sub">Every slash command explained with real-world analogies and examples — so you understand not just <em>what</em> each command does, but <em>why</em> and <em>when</em> to use it.</p>
+    <div class="hero-stats">
+      <div class="stat-item"><span class="stat-num">70+</span><span class="stat-label">Commands</span></div>
+      <div class="stat-item"><span class="stat-num">9</span><span class="stat-label">Categories</span></div>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="searchInput" placeholder="Search commands… e.g. /clear, memory, agents" oninput="renderAll()" autocomplete="off" />
+      <span class="search-count" id="countBadge">70 commands</span>
+    </div>
+    <div class="filter-row">
+      <button class="pill active" data-cat="all" onclick="setFilter('all', this)">All</button>
+      <button class="pill" data-cat="start" onclick="setFilter('start', this)">🚀 Getting Started</button>
+      <button class="pill" data-cat="session" onclick="setFilter('session', this)">💬 Session</button>
+      <button class="pill" data-cat="memory" onclick="setFilter('memory', this)">🧠 Memory &amp; Context</button>
+      <button class="pill" data-cat="model" onclick="setFilter('model', this)">⚙️ Model &amp; Config</button>
+      <button class="pill" data-cat="code" onclick="setFilter('code', this)">💻 Code &amp; Dev</button>
+      <button class="pill" data-cat="integrations" onclick="setFilter('integrations', this)">🔗 Integrations</button>
+      <button class="pill" data-cat="account" onclick="setFilter('account', this)">👤 Account</button>
+      <button class="pill" data-cat="agents" onclick="setFilter('agents', this)">🤖 Agents &amp; Plugins</button>
+      <button class="pill" data-cat="utilities" onclick="setFilter('utilities', this)">🛠️ Utilities</button>
+    </div>
+  </div>
+
+  <main id="mainContainer"></main>
+
+</div>
+
+<script>
+const DATA = [
+  {
+    id:"start",icon:"🚀",title:"Getting Started & Help",
+    commands:[
+      {name:"/help",summary:"Show all available commands and how to use them.",analogy:"Think of this as the <strong>menu at a restaurant</strong>. Before you order, you look at the menu to see what's available. /help shows you the full list of everything Claude Code can do.",example:"/help\n# Shows the full command list instantly\n\n/help permissions\n# Filter to show permission-related commands"},
+      {name:"/init",summary:"Initialize your project with a CLAUDE.md guide — the memory file Claude reads at the start of every session.",analogy:"Like <strong>writing a project brief for a new hire</strong>. You tell them the project name, tech stack, common commands, and coding rules — once — and they know it forever. CLAUDE.md is that brief.",example:"/init\n# Sets up CLAUDE.md in your project root\n\n# Set CLAUDE_CODE_NEW_INIT=1 for the full interactive wizard\n# (includes skills, hooks, and personal memory files)"},
+      {name:"/powerup",summary:"Discover Claude Code features through quick interactive animated lessons.",analogy:"Like the <strong>tutorial mode in a video game</strong> — it walks you through key features with live demos so you learn by doing, not just reading.",example:"/powerup\n# Launches interactive feature discovery mode\n# Great for onboarding new team members"},
+      {name:"/doctor",summary:"Diagnose and verify your Claude Code installation and settings. Press f to auto-fix any issues found.",analogy:"Like a <strong>health check-up for your computer</strong>. It scans everything (auth, model, network, settings) and tells you if something is broken — with a one-press fix.",example:"/doctor\n# Runs a full diagnostic scan\n# Shows status icons for each check\n# Press f to auto-fix any reported issue"},
+      {name:"/release-notes",summary:"View the changelog in an interactive version picker to see what changed in each release.",analogy:"Like checking your <strong>app's update history on the App Store</strong> — see exactly what new features, fixes, and changes came in each version.",example:"/release-notes\n# Opens interactive version history picker\n# Select any version to see its notes"},
+      {name:"/feedback",summary:"Submit feedback or bug reports directly to Anthropic. Alias: /bug",analogy:"Like hitting the <strong>Send Feedback button in any app</strong>. Your feedback goes directly to the Claude team.",example:"/feedback\n# Opens feedback submission flow\n\n/bug\n# Alias — same as /feedback"}
+    ]
+  },
+  {
+    id:"session",icon:"💬",title:"Session Management",
+    commands:[
+      {name:"/clear",summary:"Wipe the conversation history and start completely fresh. Aliases: /reset, /new",analogy:"Like <strong>opening a brand new notebook</strong>. The previous conversation is gone; you have a clean slate. Use this when switching to a completely different task.",example:"/clear\n# Clears all conversation history\n\n/reset   # same\n/new     # same"},
+      {name:"/compact [instructions]",summary:"Summarize older messages to free up context window space while keeping the important parts.",analogy:"Like <strong>summarizing a long meeting into bullet points</strong>. You don't delete everything — you distill what matters so the conversation keeps its memory but takes up less space.",example:"/compact\n# Auto-summarizes the full conversation\n\n/compact focus only on the auth bug we were fixing\n# Guides what to preserve in the summary"},
+      {name:"/branch [name]",summary:"Create a fork of the current conversation at this point. Alias: /fork",analogy:"Like <strong>creating a git branch in your codebase</strong>. You can try a different approach in the branch while the original conversation stays intact to return to.",example:"/branch try-approach-b\n# Creates a branch of this conversation\n# Use /resume to switch between branches\n\n/fork    # alias"},
+      {name:"/resume [session]",summary:"Resume a past conversation by ID or name, or open a session picker. Alias: /continue",analogy:"Like <strong>reopening a saved game</strong>. Pick up exactly where you left off — same context, same history.",example:"/resume\n# Opens an interactive session picker UI\n\n/resume my-auth-refactor\n# Resumes a session by name"},
+      {name:"/rewind",summary:"Rewind the conversation and/or your code to a previous point in history. Alias: /checkpoint",analogy:"Like <strong>Ctrl+Z but for your entire coding session</strong>. Not just the last action — you can jump back to any earlier moment, including the code state at that time.",example:"/rewind\n# Opens checkpoint picker\n# Select which point to return to\n# Both conversation AND code state are restored"},
+      {name:"/export [filename]",summary:"Export the current conversation as plain text to clipboard or a file.",analogy:"Like <strong>exporting a chat log</strong>. Great for sharing session summaries, keeping records, or turning a conversation into documentation.",example:"/export\n# Opens dialog: copy to clipboard or save to file\n\n/export my-session-notes.txt\n# Writes directly to that file"},
+      {name:"/rename [name]",summary:"Give the current session a meaningful name shown on the prompt bar.",analogy:"Like <strong>labeling a folder</strong>. Instead of Session #47, it shows auth-refactor — so you know exactly what this conversation was about when you /resume it later.",example:"/rename auth-refactor\n# Shows auth-refactor on the prompt bar\n\n/rename\n# No arg = auto-generates a name from chat history"},
+      {name:"/exit",summary:"Exit the Claude Code CLI cleanly. Alias: /quit",analogy:"Like <strong>the exit door</strong>. Cleanly closes the session and terminal process.",example:"/exit\n\n/quit   # alias — same result"}
+    ]
+  },
+  {
+    id:"memory",icon:"🧠",title:"Memory & Context",
+    commands:[
+      {name:"/memory",summary:"Edit CLAUDE.md memory files, enable/disable auto-memory, and view auto-memory entries.",analogy:"Like <strong>editing your employee handbook</strong>. You can add rules, preferences, or project facts that Claude should always know.",example:"/memory\n# Opens memory editor\n# Edit what Claude permanently remembers\n# Toggle auto-memory on or off"},
+      {name:"/context",summary:"Visualize how much of your context window is used, shown as a colored grid with optimization suggestions.",analogy:"Like a <strong>fuel gauge for Claude's memory</strong>. When the tank is nearly full, Claude starts forgetting earlier parts of the conversation. This shows exactly how full it is.",example:"/context\n# Shows a colored grid of context usage\n# Flags: memory bloat, heavy tools, capacity warnings\n# Suggests how to optimize"},
+      {name:"/add-dir <path>",summary:"Add an extra working directory so Claude can read files from it during this session.",analogy:"Like <strong>giving someone a key to another room</strong>. By default Claude only sees your current project folder. /add-dir gives it access to another folder too.",example:"/add-dir ../shared-utils\n# Now Claude can read files from shared-utils/\n# Note: .claude/ config is NOT inherited from added dirs"},
+      {name:"/btw <question>",summary:"Ask a quick side question without adding it to the main conversation history.",analogy:"Like <strong>whispering a quick question to a colleague</strong> without interrupting the main meeting. The answer is given but neither the question nor answer becomes part of the ongoing context.",example:"/btw what's the shortcut to commit in VS Code?\n# Gets an answer\n# Neither question nor answer pollutes the conversation"}
+    ]
+  },
+  {
+    id:"model",icon:"⚙️",title:"Model & Configuration",
+    commands:[
+      {name:"/model [model]",summary:"Switch the AI model Claude uses. Use arrow keys to adjust effort level on supported models.",analogy:"Like <strong>choosing a gear in a car</strong>. Sonnet is 4th gear (fast, efficient). Opus is a high-performance engine (more capable, costs more). Switch based on task complexity.",example:"/model\n# Opens interactive model picker\n\n/model claude-opus-4-6\n# Switches immediately, even mid-response\n# Use left/right arrows to adjust effort level"},
+      {name:"/effort [low|medium|high|max|auto]",summary:"Set how hard Claude thinks — from quick responses to maximum extended thinking. Max requires Opus.",analogy:"Like setting a <strong>difficulty slider for Claude's reasoning</strong>. Low is a quick brainstorm. Max is Claude doing deep, step-by-step thinking — ideal for hard problems.",example:"/effort high\n# Claude thinks harder, takes longer, better results\n\n/effort max\n# Maximum reasoning (Opus only, this session)\n\n/effort auto\n# Resets to the model's default level"},
+      {name:"/config",summary:"Open the Settings interface to adjust theme, model, output style, and preferences. Alias: /settings",analogy:"Like opening your <strong>app's Settings panel</strong>. All preferences in one place — theme, model, editor mode, output style.",example:"/config\n# Opens full settings UI\n\n/settings\n# Alias — same result"},
+      {name:"/theme",summary:"Change the color theme. Includes light, dark, colorblind-accessible, and ANSI themes.",analogy:"Like <strong>switching your IDE theme</strong> from dark to light mode — or choosing a colorblind-friendly option for accessibility.",example:"/theme\n# Opens theme picker with previews\n# Includes: light, dark, daltonized, ANSI variants"},
+      {name:"/color [color|default]",summary:"Set the prompt bar color for the current session (red, blue, green, yellow, purple, orange, pink, cyan).",analogy:"Like <strong>color-coding your browser tabs</strong>. If you have multiple Claude sessions open, different colors help you instantly know which is which.",example:"/color purple\n# Prompt bar turns purple for this session\n\n/color default\n# Resets to the default color"},
+      {name:"/fast [on|off]",summary:"Toggle fast mode — prioritizes speed over thoroughness.",analogy:"Like setting your <strong>GPS to fastest route vs most scenic</strong>. Fast mode trades some depth for quicker replies — good for rapid iteration.",example:"/fast on\n# Enables fast mode (speed over depth)\n\n/fast off\n# Back to balanced mode"},
+      {name:"/sandbox",summary:"Toggle sandbox mode — a safe, isolated environment for running code. Available on supported platforms.",analogy:"Like a <strong>firewall-protected lab</strong>. Claude can run code inside the sandbox without it affecting your real system — perfect for testing risky scripts safely.",example:"/sandbox\n# Toggles sandbox mode on/off\n# Only available on supported platforms"}
+    ]
+  },
+  {
+    id:"code",icon:"💻",title:"Code & Development",
+    commands:[
+      {name:"/plan [description]",summary:"Enter plan mode — Claude discusses and maps out a strategy before writing any code.",analogy:"Like <strong>drawing an architect's blueprint before construction begins</strong>. Claude proposes a plan, you review and adjust it, then it builds. Fewer surprises mid-way.",example:"/plan fix the auth bug\n# Claude creates a step-by-step plan\n# You review and approve before any code is touched"},
+      {name:"/ultraplan <prompt>",summary:"Draft a deep plan in an ultraplan session, review it in your browser, then execute remotely or send it back to your terminal.",analogy:"Like a <strong>war-room strategy session</strong>. Claude creates a comprehensive, reviewed plan before a single line of code is written — ideal for complex features or big refactors.",example:"/ultraplan migrate the database from Postgres to PlanetScale\n# Opens an in-browser plan editor\n# Review, edit, then execute remotely OR send back to terminal"},
+      {name:"/batch <instruction>",isSkill:true,summary:"Orchestrate large-scale codebase changes by spawning multiple parallel agents in isolated git worktrees.",analogy:"Like <strong>hiring a team of contractors</strong>. Instead of one person doing 30 things one-by-one, 30 people each tackle one thing simultaneously. Much faster for large-scale changes.",example:"/batch migrate src/ from Solid to React\n# Claude researches and breaks work into 5-30 units\n# Spawns one agent per unit in parallel git worktrees\n# Each agent runs tests and opens its own PR"},
+      {name:"/autofix-pr [prompt]",summary:"Spawn a cloud session that watches your PR and automatically pushes fixes when CI fails or reviewers comment.",analogy:"Like having a <strong>dedicated QA engineer watching your PR 24/7</strong> — they respond to every failed test and reviewer comment without you having to manually intervene.",example:"/autofix-pr\n# Watches current branch PR, fixes everything automatically\n\n/autofix-pr only fix lint and type errors\n# Restrict what it auto-fixes"},
+      {name:"/security-review",summary:"Analyze pending changes on the current branch for security vulnerabilities such as injection, auth issues, and data exposure.",analogy:"Like hiring a <strong>security auditor to review your code before deployment</strong>. They look specifically for dangerous patterns — not style issues.",example:"/security-review\n# Analyzes git diff on current branch\n# Reports: injection risks, auth issues, data exposure\n# Not a style review — purely security-focused"},
+      {name:"/simplify [focus]",isSkill:true,summary:"Review recently changed files for code quality, reuse, and efficiency — then apply fixes automatically.",analogy:"Like a <strong>code review from three senior engineers at once</strong> — they work in parallel, compare notes, then one person applies all the agreed improvements.",example:"/simplify\n# Reviews changed files and cleans up code\n\n/simplify focus on memory efficiency\n# Focused review on a specific concern"},
+      {name:"/debug [description]",isSkill:true,summary:"Enable debug logging for the current session and troubleshoot issues by reading the session debug log.",analogy:"Like turning on your car's <strong>OBD diagnostics port</strong>. Normally hidden, but when you need to find what's wrong, it gives you a stream of detailed diagnostic data.",example:"/debug\n# Enables debug logging from this point forward\n\n/debug Claude keeps making wrong file edits\n# Describes the issue to focus the diagnostic analysis"},
+      {name:"/diff",summary:"Open an interactive diff viewer showing uncommitted changes and per-turn diffs from Claude.",analogy:"Like a <strong>side-by-side track-changes view in a Word doc</strong> — but for code. See exactly what changed per Claude turn, not just the final git diff.",example:"/diff\n# Opens interactive diff viewer\n# Left/right arrows = switch git diff vs per-turn diffs\n# Up/down = browse changed files"},
+      {name:"/claude-api",isSkill:true,summary:"Load Claude API reference material for your project's language. Also auto-activates when your code imports the Anthropic SDK.",analogy:"Like having the <strong>official API docs open in a side panel automatically</strong>. No tab-switching to the docs site while building with the API.",example:"/claude-api\n# Loads docs for: Python, TypeScript, Java, Go, Ruby, C#, PHP\n# Covers: tool use, streaming, batches, structured outputs\n# Also auto-triggers when Anthropic SDK is detected in imports"}
+    ]
+  },
+  {
+    id:"integrations",icon:"🔗",title:"Integrations",
+    commands:[
+      {name:"/mcp",summary:"Manage MCP (Model Context Protocol) server connections and OAuth authentication.",analogy:"Like a <strong>USB hub for AI tools</strong>. MCP lets Claude connect to external services — databases, APIs, calendars, Slack. This command manages those connections.",example:"/mcp\n# Opens MCP server management panel\n# Connect, disconnect, re-authenticate servers\n# Dynamic /mcp__server__prompt commands appear once connected"},
+      {name:"/install-github-app",summary:"Set up the Claude GitHub Actions app to automatically review your pull requests.",analogy:"Like <strong>adding an AI reviewer to your GitHub team</strong>. It watches every PR and leaves code review comments — catching logic bugs and security issues automatically.",example:"/install-github-app\n# Walks you through selecting a repo\n# Claude adds claude-code-review.yml for customizing behavior\n# Works silently on every future PR"},
+      {name:"/install-slack-app",summary:"Install the Claude Slack app via OAuth to interact with Claude from Slack.",analogy:"Like <strong>adding Claude as a Slack bot to your workspace</strong> — so your team can use Claude without ever leaving Slack.",example:"/install-slack-app\n# Opens browser OAuth flow\n# After completion, @claude is available in any Slack channel"},
+      {name:"/ide",summary:"Manage IDE integrations such as VS Code and JetBrains, and show their connection status.",analogy:"Like checking if your <strong>phone is properly paired to a Bluetooth speaker</strong>. This shows if Claude Code is talking correctly to your IDE.",example:"/ide\n# Shows connection status for all IDE integrations\n# Manage VS Code, JetBrains connections"},
+      {name:"/chrome",summary:"Configure Claude in Chrome — the browser automation integration settings.",analogy:"Like setting up a <strong>browser co-pilot</strong>. Claude can see and interact with what's in your browser tab, enabling web-aware tasks.",example:"/chrome\n# Opens Chrome integration settings\n# Requires the Claude in Chrome extension installed"},
+      {name:"/desktop",summary:"Continue the current terminal session in the Claude Code Desktop app. macOS and Windows only. Alias: /app",analogy:"Like <strong>moving a phone call from your earbuds to a speakerphone</strong>. Same conversation, different (richer) interface.",example:"/desktop\n# Transfers current session to the Desktop app\n# macOS and Windows only\n\n/app   # alias"},
+      {name:"/voice",summary:"Toggle push-to-talk voice dictation — speak your prompts instead of typing. Requires Claude.ai account.",analogy:"Like <strong>voice-to-text on your phone</strong>, but for coding. Say your request out loud; Claude transcribes and responds.",example:"/voice\n# Toggles push-to-talk mode on/off\n# Hold a key to speak, release to send\n# Requires a Claude.ai account"},
+      {name:"/remote-control",summary:"Make this terminal session accessible for remote control from claude.ai. Alias: /rc",analogy:"Like <strong>sharing your screen but only for Claude</strong>. A remote claude.ai session can drive your local terminal — useful for handoffs and pair programming.",example:"/remote-control\n# Exposes terminal session for remote access from claude.ai\n\n/rc   # alias"},
+      {name:"/teleport",summary:"Pull a Claude Code on the web session into your local terminal. Alias: /tp",analogy:"The reverse of /remote-control. Like <strong>downloading a cloud game save to play locally</strong> — bring a remote cloud session into your terminal.",example:"/teleport\n# Opens a picker of active web sessions\n# Fetches branch + conversation locally\n\n/tp   # alias (requires claude.ai subscription)"},
+      {name:"/web-setup",summary:"Connect your GitHub account to Claude Code on the web using your local gh CLI credentials.",analogy:"Like <strong>linking your bank account to a new app</strong> — done once, then web sessions and your GitHub work seamlessly together.",example:"/web-setup\n# Authorizes GitHub for web sessions\n# /schedule prompts for this automatically if not yet connected"},
+      {name:"/mobile",summary:"Show a QR code to download the Claude mobile app. Aliases: /ios, /android",analogy:"Like a <strong>QR code at the restaurant table</strong> — scan it, get the app, and continue your work on your phone.",example:"/mobile\n# Shows QR code for the Claude mobile app\n\n/ios     # alias\n/android # alias"}
+    ]
+  },
+  {
+    id:"account",icon:"👤",title:"Account & Usage",
+    commands:[
+      {name:"/login",summary:"Sign in to your Anthropic account.",analogy:"Like the <strong>sign-in page</strong>. First thing you do when starting fresh on a new machine.",example:"/login\n# Launches the Anthropic authentication flow"},
+      {name:"/logout",summary:"Sign out from your Anthropic account.",analogy:"Like <strong>logging out of a shared computer</strong>. Clears your credentials from this machine for security.",example:"/logout\n# Signs you out securely from this machine"},
+      {name:"/cost",summary:"Show token usage statistics for the current session.",analogy:"Like checking your <strong>data usage on a phone plan</strong>. See how many tokens you've used (input, output, cache) and what it cost.",example:"/cost\n# Shows token breakdown: input / output / cache\n# See the cost-tracking guide for plan-specific details"},
+      {name:"/usage",summary:"Show your plan usage limits and current rate limit status.",analogy:"Like checking how much <strong>data you have left before throttling</strong>. See your quota, usage so far, and when limits reset.",example:"/usage\n# Shows: plan limits, usage this period, rate limit status\n# And when limits reset"},
+      {name:"/stats",summary:"Visualize daily usage, session history, streaks, and model preferences.",analogy:"Like a <strong>Spotify Wrapped for your coding sessions</strong>. How active have you been? Which models did you use most? What are your patterns?",example:"/stats\n# Opens interactive stats dashboard\n# Shows: daily usage, streaks, model breakdown, session history"},
+      {name:"/insights",summary:"Generate a report analyzing your Claude Code sessions: project areas, interaction patterns, and friction points.",analogy:"Like a <strong>retrospective report from an analyst</strong>. You spent 40% of sessions on auth. You tend to ask about errors late in sessions. Helps you work smarter.",example:"/insights\n# Analyzes all your past sessions\n# Produces a personalized usage and patterns report"},
+      {name:"/upgrade",summary:"Open the upgrade page to switch to a higher plan tier. Only visible to eligible users.",analogy:"Like an in-app <strong>upgrade prompt</strong> — takes you directly to the plan selection page.",example:"/upgrade\n# Opens plan upgrade page\n# Only visible on Pro and Max plans"},
+      {name:"/extra-usage",summary:"Configure extra usage to keep working when rate limits are hit.",analogy:"Like <strong>buying extra data when your monthly allowance runs out</strong> — instead of being cut off, you authorize additional capacity.",example:"/extra-usage\n# Configure overflow usage settings\n# Keep working past your plan's default limits"},
+      {name:"/privacy-settings",summary:"View and update your privacy settings. Only available on Pro and Max plans.",analogy:"Like the <strong>privacy dashboard in any modern app</strong>. Control what data Claude retains and how it's used.",example:"/privacy-settings\n# Pro and Max subscribers only\n# Control data retention preferences"},
+      {name:"/passes",summary:"Share a free week of Claude Code with friends. Only visible if your account is eligible.",analogy:"Like a <strong>referral code for a gym membership</strong>. If you're eligible, give friends a free trial week.",example:"/passes\n# Only visible if your account has passes available\n# Share a free week with others"}
+    ]
+  },
+  {
+    id:"agents",icon:"🤖",title:"Agents, Plugins & Automation",
+    commands:[
+      {name:"/agents",summary:"Manage sub-agent configurations — specialized agents Claude can delegate tasks to.",analogy:"Like a <strong>department directory</strong>. Your main Claude is the manager; agents are specialists (security expert, test writer, API designer). This command lists and manages them.",example:"/agents\n# Opens agent management interface\n# View, create, and configure sub-agents\n# See also: /skills for the newer format"},
+      {name:"/plugin",summary:"Manage Claude Code plugins — packaged bundles of commands, skills, and configurations from the plugin marketplace.",analogy:"Like the <strong>extensions/plugins page in VS Code</strong>. Browse, install, update, and remove functionality packages from the community.",example:"/plugin\n# Opens plugin management\n\n# Example: install official code-review plugin\nclaude plugin install code-review@claude-plugins-official"},
+      {name:"/reload-plugins",summary:"Reload all active plugins to apply changes without restarting Claude Code.",analogy:"Like <strong>hot-reloading in web development</strong>. You made changes to a plugin; this applies them immediately without closing and reopening everything.",example:"/reload-plugins\n# Reloads all active plugins instantly\n# Reports reload counts and flags any load errors"},
+      {name:"/skills",summary:"List all available skills — stored prompts and procedures Claude can use.",analogy:"Like a <strong>cookbook of procedures</strong>. Each skill is a named recipe Claude can follow — either when you call it with / or automatically when relevant.",example:"/skills\n# Lists all available skills\n# Shows both built-in bundled skills and your custom ones\n# Skills live in ~/.claude/skills/ or .claude/skills/"},
+      {name:"/hooks",summary:"View hook configurations — automated actions triggered by tool events such as run Prettier after every file edit.",analogy:"Like <strong>IFTTT rules (If This Then That)</strong>. If Claude edits a .ts file, run the TypeScript type checker. Hooks automate repetitive safety checks so you never forget them.",example:"/hooks\n# Shows all configured tool event hooks\n# Example hooks:\n#   post-edit: run Prettier on the edited file\n#   pre-commit: run test suite"},
+      {name:"/permissions",summary:"Manage allow/ask/deny rules for what tools Claude can use. Alias: /allowed-tools",analogy:"Like <strong>app permission settings on your phone</strong>. Always allow file reads. Ask before running shell commands. Never allow network access. You're in full control.",example:"/permissions\n# Opens interactive permissions dialog\n# View by scope, add/remove rules, review recent auto-mode denials\n\n/allowed-tools   # alias"},
+      {name:"/loop [interval] [prompt]",isSkill:true,summary:"Run a prompt repeatedly on a schedule while the session stays open. Alias: /proactive",analogy:"Like setting a <strong>recurring alarm with a task attached</strong>. Every 5 minutes: check if the deploy finished. Claude runs it, reports back, and runs it again — automatically.",example:"/loop 5m check if the deploy finished\n# Runs every 5 minutes automatically\n\n/loop\n# No args = self-paced autonomous maintenance check\n# Or reads from .claude/loop.md if present"},
+      {name:"/schedule [description]",summary:"Create, update, list, or run routines — persistent scheduled tasks that run even when Claude Code is closed.",analogy:"Like <strong>setting a cron job, but in plain English</strong>. Every weekday at 9am: summarize yesterday's GitHub activity. Claude handles all the scheduling logic.",example:"/schedule\n# Claude walks you through setup conversationally\n\n/schedule daily standup summary every weekday at 9am\n# Creates a persistent routine"},
+      {name:"/tasks",summary:"List and manage background tasks currently running. Also available as /bashes",analogy:"Like the <strong>Activity Monitor / Task Manager</strong> for Claude. See what background agents and processes are running right now, and stop any if needed.",example:"/tasks\n# Lists all active background tasks\n# Stop any running task from this view\n\n/bashes   # alias"}
+    ]
+  },
+  {
+    id:"utilities",icon:"🛠️",title:"Utilities & Productivity",
+    commands:[
+      {name:"/copy [N]",summary:"Copy the last assistant response (or Nth-last) to clipboard. Shows a picker when code blocks are present.",analogy:"Like a <strong>dedicated clipboard button</strong> for Claude's output — smarter than Ctrl+C because it lets you pick just the code block you want, or write it to a file.",example:"/copy\n# Copies the last response to clipboard\n\n/copy 2\n# Copies the second-to-last response\n# Press w in the picker to write to a file instead\n# Useful over SSH where clipboard isn't available"},
+      {name:"/status",summary:"Open the Settings interface (Status tab) showing version, model, account, and connectivity — works mid-response.",analogy:"Like glancing at your <strong>system status bar</strong> — model, auth, version — without stopping what Claude is doing.",example:"/status\n# Works even while Claude is in the middle of responding\n# Shows: version, model, account details, connectivity"},
+      {name:"/statusline",summary:"Configure Claude Code's status line — the info bar at the bottom of the terminal.",analogy:"Like <strong>customizing your IDE's status bar</strong>. Decide what info to show: model, token usage, session name, etc.",example:"/statusline\n# Describe what you want in the status line\n\n/statusline\n# No args = auto-configure from your existing shell prompt"},
+      {name:"/keybindings",summary:"Open or create your keybindings configuration file to define custom shortcuts.",analogy:"Like <strong>customizing keyboard shortcuts in VS Code</strong>. Remap keys to commands you use constantly for a faster workflow.",example:"/keybindings\n# Opens or creates the keybindings config file\n# Define shortcuts for your most-used commands"},
+      {name:"/terminal-setup",summary:"Configure terminal keybindings such as Shift+Enter for terminals that need special setup like VS Code, Alacritty, and Warp.",analogy:"Like a <strong>one-time terminal calibration</strong>. Some terminals don't send Shift+Enter correctly by default — this sets them up so Claude Code works perfectly.",example:"/terminal-setup\n# Only shown in terminals that need configuration\n# e.g. VS Code integrated terminal, Alacritty, Warp"},
+      {name:"/team-onboarding",summary:"Generate an onboarding guide for teammates from your real Claude Code usage history from the last 30 days.",analogy:"Like <strong>auto-generating a Getting Started wiki page</strong> based on how you actually use the tool — not a generic template, but one tailored to your real workflow.",example:"/team-onboarding\n# Analyzes your last 30 days of sessions\n# Produces a markdown guide your teammate can paste\n# as their very first message to Claude Code"},
+      {name:"/setup-bedrock",summary:"Configure Amazon Bedrock authentication, region, and model settings via interactive wizard.",analogy:"Like a <strong>setup wizard for enterprise AWS integration</strong>. Only visible when using Claude via Amazon Bedrock.",example:"/setup-bedrock\n# Only visible when CLAUDE_CODE_USE_BEDROCK=1 is set\n# Wizard covers: region, auth, model pins"},
+      {name:"/setup-vertex",summary:"Configure Google Vertex AI authentication, project, region, and model settings via interactive wizard.",analogy:"Like the <strong>Vertex AI version of /setup-bedrock</strong>. For teams running Claude through Google Cloud Platform.",example:"/setup-vertex\n# Only visible when CLAUDE_CODE_USE_VERTEX=1 is set\n# Wizard covers: project, region, auth, model pins"},
+      {name:"/remote-env",summary:"Configure the default remote environment for web sessions started with --remote.",analogy:"Like setting your <strong>default cloud environment</strong> — which container, which config — for when you start web-based remote sessions.",example:"/remote-env\n# Configure environment for --remote web sessions\n# Persists so every web session uses your preferred setup"},
+      {name:"/stickers",summary:"Order Claude Code stickers.",analogy:"Because every great developer tool <strong>deserves a laptop sticker</strong>.",example:"/stickers\n# Order real Claude Code stickers 🎉"}
+    ]
+  }
+];
+
+let activeFilter = "all";
+const TOTAL = DATA.reduce((n,c)=>n+c.commands.length,0);
+
+function setFilter(cat, el) {
+  activeFilter = cat;
+  document.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
+  el.classList.add("active");
+  renderAll();
+}
+
+function renderAll() {
+  const q = document.getElementById("searchInput").value.toLowerCase().trim();
+  const container = document.getElementById("mainContainer");
+  container.innerHTML = "";
+  let total = 0;
+
+  DATA.forEach(cat => {
+    if (activeFilter !== "all" && activeFilter !== cat.id) return;
+    const cmds = cat.commands.filter(c =>
+      !q || c.name.toLowerCase().includes(q) || c.summary.toLowerCase().includes(q) || (c.analogy && c.analogy.toLowerCase().includes(q))
+    );
+    if (!cmds.length) return;
+    total += cmds.length;
+
+    const sec = document.createElement("section");
+    sec.className = "cat-section";
+    sec.innerHTML = `
+      <div class="cat-header">
+        <div class="cat-icon-wrap">${cat.icon}</div>
+        <span class="cat-name">${cat.title}</span>
+        <span class="cat-count">${cmds.length} command${cmds.length !== 1 ? "s" : ""}</span>
+      </div>
+      <div class="cmd-grid" id="grid-${cat.id}"></div>
+    `;
+    container.appendChild(sec);
+    const grid = sec.querySelector(`#grid-${cat.id}`);
+
+    cmds.forEach(cmd => {
+      const card = document.createElement("div");
+      card.className = "cmd-card";
+      const exLines = cmd.example.split("\n").map(l =>
+        l.trim().startsWith("#") ? `<span class="cmt">${l}</span>` : l
+      ).join("\n");
+      card.innerHTML = `
+        <div class="card-top">
+          <div><span class="cmd-chip">${cmd.name}</span>${cmd.isSkill ? '<span class="skill-tag">Skill</span>' : ""}</div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="cmd-summary">${cmd.summary}</div>
+        <div class="cmd-details">
+          <div class="detail-inner">
+            <div class="detail-label">Analogy</div>
+            <div class="analogy-box">${cmd.analogy}</div>
+            <div class="detail-label">Example</div>
+            <div class="example-block"><pre>${exLines}</pre></div>
+          </div>
+        </div>`;
+      card.onclick = () => card.classList.toggle("open");
+      grid.appendChild(card);
+    });
+  });
+
+  if (!total) {
+    container.innerHTML = `<div class="no-results"><span>🔍</span>No commands match "<strong>${document.getElementById("searchInput").value}</strong>".<br/>Try a shorter or different search term.</div>`;
+  }
+  document.getElementById("countBadge").textContent = `${total} command${total !== 1 ? "s" : ""}`;
+}
+
+renderAll();
+</script>
+</body>
+</html>

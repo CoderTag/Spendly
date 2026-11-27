@@ -1,0 +1,8 @@
+{
+    "allowed_commands": [
+        "npm test",
+        "python -m http.server"
+    ],
+    "auto_commit": false,
+    "language": "English"
+}
